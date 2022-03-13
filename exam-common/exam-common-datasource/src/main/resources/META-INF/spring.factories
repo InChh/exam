@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+    top.tran4f.exam.common.datasource.env.ApplicationSeataInitializer

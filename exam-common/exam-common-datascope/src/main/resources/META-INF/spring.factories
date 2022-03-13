@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  top.tran4f.exam.common.datascope.aspect.DataScopeAspect
+
+  

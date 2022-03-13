@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  top.tran4f.exam.system.api.factory.RemoteUserFallbackFactory,\
+  top.tran4f.exam.system.api.factory.RemoteLogFallbackFactory, \
+  top.tran4f.exam.system.api.factory.RemoteFileFallbackFactory

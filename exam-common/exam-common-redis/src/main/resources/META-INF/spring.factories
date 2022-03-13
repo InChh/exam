@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  top.tran4f.exam.common.redis.configure.RedisConfig,\
+  top.tran4f.exam.common.redis.service.RedisService
+
+  

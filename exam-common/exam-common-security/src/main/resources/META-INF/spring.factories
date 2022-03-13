@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  top.tran4f.exam.common.security.config.WebMvcConfig,\
+  top.tran4f.exam.common.security.service.TokenService,\
+  top.tran4f.exam.common.security.aspect.PreAuthorizeAspect,\
+  top.tran4f.exam.common.security.aspect.InnerAuthAspect,\
+  top.tran4f.exam.common.security.handler.GlobalExceptionHandler

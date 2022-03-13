@@ -1,0 +1,15 @@
+# 基础镜像
+FROM  openjdk:8-jre
+# author
+MAINTAINER exam
+
+# 挂载目录
+VOLUME /home/exam
+# 创建目录
+RUN mkdir -p /home/exam
+# 指定路径
+WORKDIR /home/exam
+# 复制jar文件到路径
+COPY ./jar/exam-gateway.jar /home/exam/exam-gateway.jar
+# 启动网关服务
+ENTRYPOINT ["java","-jar","exam-gateway.jar"]

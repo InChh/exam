@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  top.tran4f.exam.common.log.service.AsyncLogService,\
+  top.tran4f.exam.common.log.aspect.LogAspect
