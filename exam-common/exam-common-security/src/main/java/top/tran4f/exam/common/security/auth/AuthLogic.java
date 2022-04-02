@@ -1,9 +1,9 @@
 package top.tran4f.exam.common.security.auth;
 
 import org.springframework.util.PatternMatchUtils;
+import top.tran4f.exam.common.core.exception.auth.NoPermissionException;
+import top.tran4f.exam.common.core.exception.auth.NoRoleException;
 import top.tran4f.exam.common.core.exception.auth.NotLoginException;
-import top.tran4f.exam.common.core.exception.auth.NotPermissionException;
-import top.tran4f.exam.common.core.exception.auth.NotRoleException;
 import top.tran4f.exam.common.core.utils.SpringUtils;
 import top.tran4f.exam.common.core.utils.StringUtils;
 import top.tran4f.exam.common.security.annotation.Logical;
@@ -103,19 +103,19 @@ public class AuthLogic {
      * @param permission 权限字符串
      * @return 用户是否具备某权限
      */
-    public boolean hasPermi(String permission) {
-        return hasPermi(getPermiList(), permission);
+    public boolean hasPermission(String permission) {
+        return hasPermission(getPermissionList(), permission);
     }
 
     /**
-     * 验证用户是否具备某权限, 如果验证未通过，则抛出异常: NotPermissionException
+     * 验证用户是否具备某权限, 如果验证未通过，则抛出异常: NoPermissionException
      *
      * @param permission 权限字符串
-     * @return 用户是否具备某权限
+     * @throws NoPermissionException 无权限异常
      */
-    public void checkPermi(String permission) {
-        if (!hasPermi(getPermiList(), permission)) {
-            throw new NotPermissionException(permission);
+    public void checkPermission(String permission) {
+        if (!hasPermission(getPermissionList(), permission)) {
+            throw new NoPermissionException(permission);
         }
     }
 
@@ -124,11 +124,11 @@ public class AuthLogic {
      *
      * @param requiresPermissions 注解对象
      */
-    public void checkPermi(RequiresPermissions requiresPermissions) {
+    public void checkPermission(RequiresPermissions requiresPermissions) {
         if (requiresPermissions.logical() == Logical.AND) {
-            checkPermiAnd(requiresPermissions.value());
+            checkPermissionAnd(requiresPermissions.value());
         } else {
-            checkPermiOr(requiresPermissions.value());
+            checkPermissionOr(requiresPermissions.value());
         }
     }
 
@@ -136,12 +136,13 @@ public class AuthLogic {
      * 验证用户是否含有指定权限，必须全部拥有
      *
      * @param permissions 权限列表
+     * @throws NoPermissionException 无权限异常
      */
-    public void checkPermiAnd(String... permissions) {
-        Set<String> permissionList = getPermiList();
+    public void checkPermissionAnd(String... permissions) {
+        Set<String> permissionList = getPermissionList();
         for (String permission : permissions) {
-            if (!hasPermi(permissionList, permission)) {
-                throw new NotPermissionException(permission);
+            if (!hasPermission(permissionList, permission)) {
+                throw new NoPermissionException(permission);
             }
         }
     }
@@ -151,15 +152,15 @@ public class AuthLogic {
      *
      * @param permissions 权限码数组
      */
-    public void checkPermiOr(String... permissions) {
-        Set<String> permissionList = getPermiList();
+    public void checkPermissionOr(String... permissions) {
+        Set<String> permissionList = getPermissionList();
         for (String permission : permissions) {
-            if (hasPermi(permissionList, permission)) {
+            if (hasPermission(permissionList, permission)) {
                 return;
             }
         }
         if (permissions.length > 0) {
-            throw new NotPermissionException(permissions);
+            throw new NoPermissionException(permissions);
         }
     }
 
@@ -174,13 +175,14 @@ public class AuthLogic {
     }
 
     /**
-     * 判断用户是否拥有某个角色, 如果验证未通过，则抛出异常: NotRoleException
+     * 判断用户是否拥有某个角色, 如果验证未通过，则抛出异常: NoRoleException
      *
      * @param role 角色标识
+     * @throws NoRoleException 无对应角色异常
      */
     public void checkRole(String role) {
         if (!hasRole(role)) {
-            throw new NotRoleException(role);
+            throw new NoRoleException(role);
         }
     }
 
@@ -201,12 +203,13 @@ public class AuthLogic {
      * 验证用户是否含有指定角色，必须全部拥有
      *
      * @param roles 角色标识数组
+     * @throws NoRoleException 无对应角色异常
      */
     public void checkRoleAnd(String... roles) {
         Set<String> roleList = getRoleList();
         for (String role : roles) {
             if (!hasRole(roleList, role)) {
-                throw new NotRoleException(role);
+                throw new NoRoleException(role);
             }
         }
     }
@@ -215,6 +218,7 @@ public class AuthLogic {
      * 验证用户是否含有指定角色，只需包含其中一个
      *
      * @param roles 角色标识数组
+     * @throws NoRoleException 无对应角色异常
      */
     public void checkRoleOr(String... roles) {
         Set<String> roleList = getRoleList();
@@ -224,7 +228,7 @@ public class AuthLogic {
             }
         }
         if (roles.length > 0) {
-            throw new NotRoleException(roles);
+            throw new NoRoleException(roles);
         }
     }
 
@@ -259,9 +263,9 @@ public class AuthLogic {
     public void checkByAnnotation(RequiresPermissions at) {
         String[] permissionArray = at.value();
         if (at.logical() == Logical.AND) {
-            this.checkPermiAnd(permissionArray);
+            this.checkPermissionAnd(permissionArray);
         } else {
-            this.checkPermiOr(permissionArray);
+            this.checkPermissionOr(permissionArray);
         }
     }
 
@@ -284,7 +288,7 @@ public class AuthLogic {
      *
      * @return 权限列表
      */
-    public Set<String> getPermiList() {
+    public Set<String> getPermissionList() {
         try {
             LoginUser loginUser = getLoginUser();
             return loginUser.getPermissions();
@@ -300,8 +304,9 @@ public class AuthLogic {
      * @param permission  权限字符串
      * @return 用户是否具备某权限
      */
-    public boolean hasPermi(Collection<String> authorities, String permission) {
-        return authorities.stream().filter(StringUtils::hasText)
+    public boolean hasPermission(Collection<String> authorities, String permission) {
+        return authorities.stream()
+                .filter(StringUtils::hasText)
                 .anyMatch(x -> ALL_PERMISSION.contains(x) || PatternMatchUtils.simpleMatch(x, permission));
     }
 
@@ -313,7 +318,8 @@ public class AuthLogic {
      * @return 用户是否具备某角色权限
      */
     public boolean hasRole(Collection<String> roles, String role) {
-        return roles.stream().filter(StringUtils::hasText)
+        return roles.stream()
+                .filter(StringUtils::hasText)
                 .anyMatch(x -> SUPER_ADMIN.contains(x) || PatternMatchUtils.simpleMatch(x, role));
     }
 }

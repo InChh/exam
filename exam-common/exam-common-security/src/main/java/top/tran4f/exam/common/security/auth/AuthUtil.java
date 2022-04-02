@@ -25,7 +25,7 @@ public class AuthUtil {
     /**
      * 会话注销，根据指定Token
      *
-     * @param tokenValue 指定token
+     * @param token 指定token
      */
     public static void logoutByToken(String token) {
         authLogic.logoutByToken(token);
@@ -104,8 +104,8 @@ public class AuthUtil {
      * @param permission 权限码
      * @return 是否含有指定权限
      */
-    public static boolean hasPermi(String permission) {
-        return authLogic.hasPermi(permission);
+    public static boolean hasPermission(String permission) {
+        return authLogic.hasPermission(permission);
     }
 
     /**
@@ -113,8 +113,8 @@ public class AuthUtil {
      *
      * @param permission 权限码
      */
-    public static void checkPermi(String permission) {
-        authLogic.checkPermi(permission);
+    public static void checkPermission(String permission) {
+        authLogic.checkPermission(permission);
     }
 
     /**
@@ -122,8 +122,8 @@ public class AuthUtil {
      *
      * @param requiresPermissions 权限注解
      */
-    public static void checkPermi(RequiresPermissions requiresPermissions) {
-        authLogic.checkPermi(requiresPermissions);
+    public static void checkPermission(RequiresPermissions requiresPermissions) {
+        authLogic.checkPermission(requiresPermissions);
     }
 
     /**
@@ -131,8 +131,8 @@ public class AuthUtil {
      *
      * @param permissions 权限码数组
      */
-    public static void checkPermiAnd(String... permissions) {
-        authLogic.checkPermiAnd(permissions);
+    public static void checkPermissionAnd(String... permissions) {
+        authLogic.checkPermissionAnd(permissions);
     }
 
     /**
@@ -140,7 +140,7 @@ public class AuthUtil {
      *
      * @param permissions 权限码数组
      */
-    public static void checkPermiOr(String... permissions) {
-        authLogic.checkPermiOr(permissions);
+    public static void checkPermissionOr(String... permissions) {
+        authLogic.checkPermissionOr(permissions);
     }
 }
