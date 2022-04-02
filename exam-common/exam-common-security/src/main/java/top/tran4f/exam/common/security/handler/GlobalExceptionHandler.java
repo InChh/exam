@@ -11,8 +11,8 @@ import top.tran4f.exam.common.core.constant.HttpStatus;
 import top.tran4f.exam.common.core.exception.DemoModeException;
 import top.tran4f.exam.common.core.exception.InnerAuthException;
 import top.tran4f.exam.common.core.exception.ServiceException;
-import top.tran4f.exam.common.core.exception.auth.NotPermissionException;
-import top.tran4f.exam.common.core.exception.auth.NotRoleException;
+import top.tran4f.exam.common.core.exception.auth.NoPermissionException;
+import top.tran4f.exam.common.core.exception.auth.NoRoleException;
 import top.tran4f.exam.common.core.utils.StringUtils;
 import top.tran4f.exam.common.core.web.domain.AjaxResult;
 
@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
     /**
      * 权限码异常
      */
-    @ExceptionHandler(NotPermissionException.class)
-    public AjaxResult handleNotPermissionException(NotPermissionException e, HttpServletRequest request) {
+    @ExceptionHandler(NoPermissionException.class)
+    public AjaxResult handleNotPermissionException(NoPermissionException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',权限码校验失败'{}'", requestURI, e.getMessage());
         return AjaxResult.error(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
     /**
      * 角色权限异常
      */
-    @ExceptionHandler(NotRoleException.class)
-    public AjaxResult handleNotRoleException(NotRoleException e, HttpServletRequest request) {
+    @ExceptionHandler(NoRoleException.class)
+    public AjaxResult handleNotRoleException(NoRoleException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',角色权限校验失败'{}'", requestURI, e.getMessage());
         return AjaxResult.error(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
